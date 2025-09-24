@@ -69,7 +69,7 @@ void setup()
   // (void)argc; /*Unused*/
   // (void)argv; /*Unused*/
 
-  printf("Hello world");
+  // printf("Hello world");
   // Serial.begin("/dev/ttyUSB0", 9600);
   Serial.begin(9600);
   // std::cout << "Передаём на UART" << std::endl;
@@ -109,8 +109,6 @@ void setup()
 
   // return 0;
 }
-
-#endif
 
 /**********************
  *   STATIC FUNCTIONS

@@ -29,49 +29,32 @@ set(CMAKE_CXX_FLAGS "-mmcu=${MCU} -DF_CPU=${F_CPU} -Os -Wall")
 # Флаги линковки
 set(CMAKE_EXE_LINKER_FLAGS "-mmcu=${MCU} -Wl,--gc-sections")
 
-#-----------------------------
-    # Указываем include-директории  
-    # include_directories(${CMAKE_SOURCE_DIR})
-    include_directories(Arduino)
-    
-    # Список общих платфоремнно-назависимых файлов проекта
-    SET(ArduinoFiles
-        Arduino/abi.cpp
-        Arduino/hooks.c
-        Arduino/wiring.c
-        Arduino/IPAddress.cpp
-        Arduino/Stream.cpp
-        Arduino/wiring_digital.c
-        Arduino/CDC.cpp
-        #Arduino/main.cpp
-        Arduino/Tone.cpp
-        Arduino/wiring_pulse.c
-        Arduino/new
-        Arduino/wiring_pulse.S
-        Arduino/HardwareSerial0.cpp
-        Arduino/new.cpp
-        Arduino/wiring_shift.c
-        Arduino/HardwareSerial1.cpp
-        Arduino/USBCore.cpp
-        Arduino/WMath.cpp
-        Arduino/HardwareSerial2.cpp
-        Arduino/PluggableUSB.cpp
-        Arduino/WString.cpp
-        Arduino/HardwareSerial3.cpp
-        Arduino/HardwareSerial.cpp
-        Arduino/Print.cpp
-        Arduino/WInterrupts.c
-        Arduino/wiring_analog.c
-    )
-#-----------------------------
 
+# Подключение файлов библиотеки Arduino
+if(EXISTS "${CMAKE_SOURCE_DIR}/Arduino/ArduinoFiles.cmake")
+    include(Arduino/ArduinoFiles.cmake)
+    message(STATUS "Подключается библиотека Arduino")
+else()
+    message(STATUS "Библиотека Arduino не используется")
+    set(ArduinoFiles )
+endif()
+
+# Подключение файлов пользователя
+if(EXISTS "${CMAKE_SOURCE_DIR}/src/UserFiles.cmake")
+    include(src/UserFiles.cmake)
+else()
+    set(UserFiles )
+endif()
+
+
+# В директории /usr/share/arduino/hardware/arduino/avr/variants/
+# выбираются pins_arduino.h
 include_directories(/usr/share/arduino/hardware/arduino/avr/variants/standard)
 
 # Добавление исходников
 add_executable(${PROJECT_NAME} 
-    src/main.c
-    # Добавьте другие исходные файлы здесь
     ${ArduinoFiles}
+    ${UserFiles}
 )
 
 # Дополнительные настройки
